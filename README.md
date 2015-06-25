@@ -11,7 +11,7 @@ eg.
 Thus to conditionally compile if that configuration is toggled, you do:
 
 ```
-#[cfg(x86_32_kbuild)
+#[cfg(x86_32_kbuild)]
 fn only_32bit() { }
 ```
 
