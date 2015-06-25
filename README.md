@@ -18,11 +18,11 @@ eg.
 ### example Makefile
 
 ```
-$(obj)/egcrate.o: egcrate.rs
+$(obj)/egcrate.o: $(src)/egcrate.rs
 	./rskbuild crate $(src)/egcrate.rs
 	./rskbuild obj $(src)/egcrate.rs -o $(obj)/egcrate.o
 
-$(obj)/example.o: example.rs
+$(obj)/example.o: $(src)/example.rs
 	./rskbuild obj $(src)/example.rs -o $(obj)/example.o
 
 obj-y=egcrate.o example.o
