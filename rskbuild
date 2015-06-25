@@ -1,0 +1,53 @@
+#!/bin/env python
+import sys
+from os import environ, stat, path
+from subprocess import call
+
+def generate_wrconfig():
+    print("Generating wrconfig...")
+    fw = open(".wrconfig", "w+")
+    fr = open(".config", "r")
+    for line in iter(fr.readline, ''):
+        if line[0] == '#' or line[0] == '\n':
+                continue
+
+        cfg = line.strip('\n').split('=')
+        if cfg[1] == 'y':
+            fw.write(cfg[0][7:].lower()+"_kbuild\n")
+
+    print("Done!");
+
+if path.isfile(".wrconfig") == False:
+    generate_wrconfig()
+
+cfginfo = stat(".config")
+wrinfo = stat(".wrconfig")
+
+if cfginfo.st_mtime > wrinfo.st_mtime:
+    print("wrconfig out of date")
+    generate_wrconfig()
+
+configs = [line.rstrip('\n') for line in open(".wrconfig")]
+
+# flag types
+codegen = ["-C", "no-stack-check", "-C", "relocation-model=static"]
+target = ["--target=i686-unknown-linux-gnu"]
+emit = ["--emit","obj"]
+lib = ["-L","."]
+
+cmd = ["rustc"] + target
+
+for cfg in configs:
+    cmd = cmd + ["--cfg", cfg]
+
+if sys.argv[1] == "obj":
+        cmd = cmd + codegen + emit + lib
+elif sys.argv[1] == "crate":
+        cmd = cmd
+
+cmd = cmd + sys.argv[2:]
+
+if call(cmd) != 0:
+    exit(1)
+
+exit(0)
