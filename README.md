@@ -10,6 +10,8 @@ eg.
 
 .wrconfig is also regenerated when .config is modified.
 
+*note* --target is set to 32bit, change where necessary
+
 ### Options
 
 * `crate` will compile and link the rust code into a crate
